@@ -6,14 +6,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeError, setError } from '../../actions/ui';
 import { startRegisterWithEmailPasswordName } from '../../actions/auth';
 
-export const RegisterScreen = () => {
 
+export const RegisterScreen = () => {
+  
     const dispatch = useDispatch();
 
     const {msgError}= useSelector(state =>state.ui);
 
 
     const [formValues, handleInputChange] = useForm({
+        userName:'',
         name: '',
         apellidoP:'',
         apellidoM:'',
@@ -24,17 +26,23 @@ export const RegisterScreen = () => {
         password2: ''
     });
 
-    const {name,apellidoP,apellidoM,tel,direccion,email,password,password2} = formValues; 
+    const {userName,name,apellidoP,apellidoM,tel,direccion,email,password,password2} = formValues; 
 
     const handleRegister= (e)=>{
         e.preventDefault();
         if(isFormValid()){
-            dispatch(startRegisterWithEmailPasswordName(email,password,name));
+            dispatch(startRegisterWithEmailPasswordName(email,password,userName));
         }
 
     }
     
     const isFormValid = () =>{
+        if(userName.trim().length === 0){
+            dispatch(setError('Nombre de usuario es requerido'));
+            console.log('name es requerido');
+            
+            return false;
+        }
         if(name.trim().length === 0){
             dispatch(setError('name es requerido'));
             console.log('name es requerido');
@@ -99,7 +107,16 @@ export const RegisterScreen = () => {
               )
             }
 
-
+<input 
+            type='text'
+             placeholder='Nombre de usuario' 
+             name='userName'
+             className='auth__input'
+             autoComplete='off'
+             value={userName}
+             onChange={handleInputChange}
+            //  required
+             />
 
             <input 
             type='text'
